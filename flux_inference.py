@@ -22,7 +22,7 @@
 # - Utilizes `accelerate` with `device_map` to distribute workloads across multiple CUDA devices.
 
 # --- Setup imports and helper functions ---
-#from modules.TextEncoder import TextEncoder  #TODO
+from modules.TextEncoder import TextEncoder
 from modules.FluxPriorRedux import FluxPriorRedux
 from modules.ImageGenerator import ImageGenerator
 from modules.ImageDecoder import ImageDecoder
@@ -36,17 +36,32 @@ import torch
 
 # --- Model selection ---
 # You can switch between different Flux models here
-model = "ostris/Flex.1-alpha"  # Alternatives: "black-forest-labs/FLUX.1-schnell", "black-forest-labs/FLUX.1-dev"
+model = "black-forest-labs/FLUX.1-schnell" #  Alternatives:  "ostris/Flex.1-alpha"  "black-forest-labs/FLUX.1-schnell", "black-forest-labs/FLUX.1-dev"
+
+prompt =  "Ultra High Resolution Art of Superman and Wonder Woman in a thunderous anime-style battle among shattered skyscrapers and storm-warped clouds. Wonder Woman’s armor is cracked, her blade clashing against Superman’s heat vision blast. Floating debris circles them as the sky rains violet lightning. Concept art with vivid brushwork and glowing edge highlights, channeling energy from anime battle epics, award-winning, epic composition, ultra detailed"
 
 # --- Load and prepare the initial image ---
 init_image = load_image(
-        "https://huggingface.co/datasets/OzzyGT/testing-resources/resolve/main/differential/20240329211129_4024911930.png?download=true"
+    "temp/flux_20250505_183815.png"
 )
 # Ensure dimensions are multiples of the model's required size
-width, height = fix_size(init_image.width), fix_size(init_image.height)
+#width, height = fix_size(init_image.width), fix_size(init_image.height)
+width, height = fix_size(1280), fix_size(1280)
 
-# --- Generate or load prompt embeddings ---
-enable_redux = True
+
+# --- Generate or load prompt embeddings (tokenizer/text_encoder)---
+enable_textencoder = True
+if enable_textencoder:
+    with TextEncoder() as text_encoder:
+
+        text_encoder.pipeline.load_lora_weights('enhanceaiteam/Flux-uncensored', weight_name='lora.safetensors', prefix=None)
+        prompt_embeds, pooled_prompt_embeds = text_encoder.get_embeddings(prompt)
+        # Save embeddings for debugging or reuse
+        torch.save(prompt_embeds, "temp/debug_latents/prompt_embeds.pt")
+        torch.save(pooled_prompt_embeds, "temp/debug_latents/pooled_prompt_embeds.pt")      
+  
+# --- Generate or load prompt embeddings (REDUX)---
+enable_redux = False
 if enable_redux:
     # Use FluxPriorRedux to compute prompt embeddings from the initial image
     with FluxPriorRedux(run_gpu=False) as Redux:
@@ -55,10 +70,10 @@ if enable_redux:
     # Save embeddings for debugging or reuse
     torch.save(prompt_embeds, "temp/debug_latents/prompt_embeds.pt")
     torch.save(pooled_prompt_embeds, "temp/debug_latents/pooled_prompt_embeds.pt")
-else:
-    # Load precomputed embeddings to skip the embedding step
-    prompt_embeds = torch.load("temp/debug_latents/prompt_embeds.pt")
-    pooled_prompt_embeds = torch.load("temp/debug_latents/pooled_prompt_embeds.pt")
+#else:
+#    # Load precomputed embeddings to skip the embedding step
+#    prompt_embeds = torch.load("temp/debug_latents/prompt_embeds.pt")
+#    pooled_prompt_embeds = torch.load("temp/debug_latents/pooled_prompt_embeds.pt")
 
 # --- Latent generation with ImageGenerator ---
 latentgen = True
@@ -66,19 +81,19 @@ if latentgen:
     # Reserve a fraction of GPU memory for the model and GUI
     # Recommended scale: 0.90–0.95 (reserve ~1 GB VRAM for OS/GUI tasks)
     maxmem = max_memory(scale=0.90)
-    print(f"🌱 Initialized GPU/GPU'S with memory scale: {maxmem}")
+    print(f"🌱 Initialized GPU with memory scale: {maxmem}")
 
     # Initialize the image generator pipeline
     with ImageGenerator(
         model_id=model,
         max_memory=maxmem,
         full_load=True,
-        img2mg=True,
+        img2mg=False,
         torch_dtype=torch.bfloat16
     ) as latent:
         # Seed the random generator for reproducibility
-        seed = random.randint(int(1e11), int(1e12 - 1))
-        generator = torch.Generator(device="cuda").manual_seed(seed)
+        seed = random.randint(1e11, 1e12 - 1)
+        generator = torch.Generator(device="cuda:1").manual_seed(seed)
         print(f"🌱 Generator initialized with seed: {generator.initial_seed()}")
 
         # Run the latent generator to produce image latents
@@ -88,7 +103,7 @@ if latentgen:
             pooled_prompt_embeds=pooled_prompt_embeds,
             width=width,
             height=height,
-            num_inference=25,
+            num_inference=35,
             seed=generator
         )
         # Save the generated latents for debugging or reuse
@@ -98,11 +113,13 @@ if latentgen:
 with ImageDecoder(model_id=model, rungpu=True) as decoder:
     # Create a timestamp for the output filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
     # Load the saved latents
     latent = torch.load("temp/debug_latents/results.pt")
 
     # Decode the latent tensors into actual images
-    image = decoder.decode(latents=latent, height=height, width=width)
+    image = decoder.decode(latents=latent, height=height, width=width) 
+
     # Save the first generated image with a timestamped filename
     image[0].save(f"temp/flux_{timestamp}.png")
     print(f"📸 Saved image as temp/flux_{timestamp}.png")
