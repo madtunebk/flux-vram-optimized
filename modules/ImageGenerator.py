@@ -157,7 +157,6 @@ class ImageGenerator:
     def remove_accelerate_hooks(self):
         for attr_name, attr_value in self.__dict__.items():
             if hasattr(attr_value, "_hf_hook"):
-                print(attr_name)
                 remove_hook_from_submodules(attr_value)
 
         if self.pipeline:
