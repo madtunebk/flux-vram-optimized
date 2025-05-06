@@ -85,7 +85,7 @@ All script options can be adjusted in `run_inference.py`:
 
 | Parameter       | Description                                                                          | Default                            |
 | --------------- | ------------------------------------------------------------------------------------ | ---------------------------------- |
-| `model_id`      | Hugging Face model ID for Flux generation (e.g., `black-forest-labs/FLUX.1-schnell`) | `black-forest-labs/FLUX.1-schnell` |
+| `model_id`      | Hugging Face model ID for Flux generation (e.g., `black-forest-labs/FLUX.1-schnell`) | `black-forest-labs/FLUX.1-dev`     |
 | `enable_redux`  | Toggle Flux Redux embedding stage                                                    | `True`                             |
 | `scale`         | Fraction of GPU memory to allocate (reserve \~1 GB for OS/GUI)                       | `0.90`                             |
 | `num_inference` | Number of diffusion steps / iterations                                               | `25`                               |
