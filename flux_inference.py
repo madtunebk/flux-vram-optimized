@@ -32,7 +32,7 @@ import torch
 
 # --- Model selection ---
 # You can switch between different Flux models here
-model = "black-forest-labs/FLUX.1-schnell"  # Alternatives: "ostris/Flex.1-alpha"
+model = "ostris/Flex.1-alpha"  # Alternatives: "black-forest-labs/FLUX.1-schnell", "black-forest-labs/FLUX.1-dev"
 
 # --- Load and prepare the initial image ---
 init_image = load_image(
