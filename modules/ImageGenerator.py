@@ -3,7 +3,7 @@ from diffusers import FluxImg2ImgPipeline, FluxPipeline, AutoModel, AutoencoderK
 from PIL import Image
 from accelerate.hooks import remove_hook_from_submodules
 
-from .helpers import ensure_dtype, flush, debug
+from .helpers import flush, debug
 
 import torch
 
