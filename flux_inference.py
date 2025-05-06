@@ -66,7 +66,7 @@ if latentgen:
     # Reserve a fraction of GPU memory for the model and GUI
     # Recommended scale: 0.90–0.95 (reserve ~1 GB VRAM for OS/GUI tasks)
     maxmem = max_memory(scale=0.90)
-    print(f"🌱 Initialized GPU with memory scale: {maxmem}")
+    print(f"🌱 Initialized GPU/GPU'S with memory scale: {maxmem}")
 
     # Initialize the image generator pipeline
     with ImageGenerator(
