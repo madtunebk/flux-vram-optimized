@@ -40,7 +40,7 @@ A modular, memory-efficient image generation workflow leveraging Hugging Face Fl
   * PyTorch 2.x with CUDA support
   * `accelerate` (for distributed device mapping)
   * `diffusers`, `transformers`, `torch`, and other dependencies (see `requirements.txt`).
-  *  
+  * `protobuf`, `sentencepiece`, and `peft` are used to load LoRA adapters or Textual Inversion embeddings.
   * **DType Compatibility**:
   * Pipeline defaults to `bfloat16` on modern GPUs.
   * If `bfloat16` isn’t supported (e.g., older NVIDIA cards), switch to full-precision `float32` or half-precision `float16` by editing the `torch_dtype` parameter in `run_inference.py`.
