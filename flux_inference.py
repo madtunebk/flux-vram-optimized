@@ -50,8 +50,6 @@ width, height = fix_size(init_image.width), fix_size(init_image.height)
 enable_textencoder = True
 if enable_textencoder:
     with TextEncoder() as text_encoder:
-
-        text_encoder.pipeline.load_lora_weights('enhanceaiteam/Flux-uncensored', weight_name='lora.safetensors', prefix=None)
         prompt_embeds, pooled_prompt_embeds = text_encoder.get_embeddings(prompt)
         # Save embeddings for debugging or reuse
         torch.save(prompt_embeds, "temp/debug_latents/prompt_embeds.pt")
