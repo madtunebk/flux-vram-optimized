@@ -78,7 +78,7 @@ if latentgen:
     ) as latent:
         # Seed the random generator for reproducibility
         seed = random.randint(1e11, 1e12 - 1)
-        generator = torch.Generator(device="cuda:1").manual_seed(seed)
+        generator = torch.Generator(device="cuda").manual_seed(seed)
         print(f"🌱 Generator initialized with seed: {generator.initial_seed()}")
 
         # Run the latent generator to produce image latents
