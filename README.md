@@ -1,6 +1,10 @@
 # Flux VRAM-Optimized Image Generation
 
-A modular, memory-efficient image generation pipeline built on top of Hugging Face Flux models. Designed to run on consumer-grade GPUs (12–16 GB VRAM) by splitting the workflow into three separate stages: prior embedding, latent generation, and VAE decoding. Utilizes `accelerate` with `device_map` to distribute workload across multiple GPUs.
+A modular, memory-efficient image generation workflow leveraging Hugging Face Flux models and text encoding. Designed for consumer-grade GPUs by splitting the process into four stages:  
+1. **Text Encoding** – converts your text prompt into embeddings via a CLIP-style encoder  
+2. **Prior Embedding** (FluxPriorRedux) – produces image-conditioned latent prompts  
+3. **Latent Generation** (ImageGenerator) – runs the diffusion (text2img/img2img) pipeline  
+4. **VAE Decoding** (ImageDecoder) – decodes latents back into Pillow `Image` objects  
 
 ---
 
@@ -12,12 +16,14 @@ A modular, memory-efficient image generation pipeline built on top of Hugging Fa
 
 ## 🚀 Features
 
-* **Modular Design**: Separate pipelines for embedding (FluxPriorRedux), latent generation (ImageGenerator), and decoding (ImageDecoder).
-* **VRAM Optimization**: Only relevant components are loaded per stage to minimize peak memory usage.
-* **Multi-GPU Support**: Requires at least two GPUs; uses `accelerate` and `device_map` under the hood.
-* **Model Flexibility**: Switch between `black-forest-labs/FLUX.1-dev`, `FLUX.1-schnell`, or custom Flux variants.
-* **Redux Variation Mode**: Optional stylized variations of input images by enabling Flux Redux.
-* **Reproducibility**: Seeded random generators for deterministic outputs.
+- **Text Encoding**: Encodes user-provided prompts via `TextEncoder.py`.  
+- **Image-Conditioned Prior**: FluxPriorRedux computes image-driven embeddings.  
+- **Latent Generation**: Minimal text2img/img2img pipelines (transformers + VAE + Flux).  
+- **VAE Decoding**: AutoencoderKL → Pillow images.  
+- **VRAM Optimization**: Stage-by-stage loading to cap memory peaks.  
+- **Multi-GPU Support**: ≥2 GPUs (12 GB each) or a single 20 GB+ GPU; uses `accelerate` + `device_map`.  
+- **Redux Variation Mode**: Optional stylized “Redux” variations.  
+- **Reproducibility**: Seeded generators for bit-exact results.  
 
 ---
 
@@ -60,6 +66,7 @@ pip install -r requirements.txt
 ```text
 flux-vram-optimized/
 ├── modules/
+│   ├── TextEncoder.py         # Encodes text prompts into embeddings
 │   ├── FluxPriorRedux.py      # Encodes image into prompt embeddings
 │   ├── ImageGenerator.py      # Latent generator (text2img / img2img)
 │   └── ImageDecoder.py        # VAE decoder pipeline
