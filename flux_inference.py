@@ -42,7 +42,7 @@ init_image = load_image(
 width, height = fix_size(init_image.width), fix_size(init_image.height)
 
 # --- Generate or load prompt embeddings ---
-enable_redux = False
+enable_redux = True
 if enable_redux:
     # Use FluxPriorRedux to compute prompt embeddings from the initial image
     with FluxPriorRedux(run_gpu=False) as Redux:
