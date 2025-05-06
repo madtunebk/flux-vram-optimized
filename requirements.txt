@@ -2,4 +2,4 @@ torch
 diffusers
 transformers
 accelerate
-pillow 
+protobuf
