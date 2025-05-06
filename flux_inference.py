@@ -14,7 +14,8 @@
 #
 # **Design Rationale:**
 # - Modular separation ensures only required components are loaded at each stage, reducing peak VRAM usage.
-# - Successfully tested on GPUs with 12 GB VRAM; at least 16 GB VRAM is recommended to avoid OOM errors.
+# - Successfully tested on GPUs with 12 GB VRAM; at least 16 GB VRAM is recommended to avoid OOM errors.
+# - Requires at least 2 GPUs to run the full pipeline via `accelerate` with `device_map`.
 # - Utilizes `accelerate` with `device_map` to distribute workloads across multiple CUDA devices.
 
 # --- Setup imports and helper functions ---
@@ -31,17 +32,17 @@ import torch
 
 # --- Model selection ---
 # You can switch between different Flux models here
-model = "ostris/Flex.1-alpha"  # Alternatives: "black-forest-labs/FLUX.1-schnell", "black-forest-labs/FLUX.1-dev"
+model = "black-forest-labs/FLUX.1-schnell"  # Alternatives: "ostris/Flex.1-alpha"
 
 # --- Load and prepare the initial image ---
 init_image = load_image(
-    "temp/flux_20250505_183815.png"
+    "https://static01.nyt.com/images/2023/08/13/magazine/13mag-female/13mag-female-articleLarge.jpg"
 )
 # Ensure dimensions are multiples of the model's required size
 width, height = fix_size(init_image.width), fix_size(init_image.height)
 
 # --- Generate or load prompt embeddings ---
-enable_redux = True
+enable_redux = False
 if enable_redux:
     # Use FluxPriorRedux to compute prompt embeddings from the initial image
     with FluxPriorRedux(run_gpu=False) as Redux:
@@ -68,7 +69,7 @@ if latentgen:
         model_id=model,
         max_memory=maxmem,
         full_load=True,
-        img2mg=False,
+        img2mg=True,
         torch_dtype=torch.bfloat16
     ) as latent:
         # Seed the random generator for reproducibility
@@ -93,13 +94,13 @@ if latentgen:
 with ImageDecoder(model_id=model, rungpu=True) as decoder:
     # Create a timestamp for the output filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
+    # Optionally resize decode dimensions
+    width, height = fix_size(960), fix_size(960)
     # Load the saved latents
     latent = torch.load("temp/debug_latents/results.pt")
 
     # Decode the latent tensors into actual images
-    image = decoder.decode(latents=latent, height=height, width=width) 
-
+    image = decoder.decode(latents=latent, height=height, width=width)
     # Save the first generated image with a timestamped filename
     image[0].save(f"temp/flux_{timestamp}.png")
     print(f"📸 Saved image as temp/flux_{timestamp}.png")
