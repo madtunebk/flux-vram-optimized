@@ -26,12 +26,11 @@ A modular, memory-efficient image generation pipeline built on top of Hugging Fa
 ## 📋 Prerequisites
 
 * **Hardware**:
+  * Minimum: 2 GPUs with 12 GB VRAM each (suggested testing), or 1 GPU with ≥20 GB VRAM
+  * Recommended: ≥16 GB VRAM across ≥2 GPUs for smooth operation.
 
-  * Minimum: 12 GB VRAM (suggested testing)
-  * Recommended: ≥16 GB VRAM across at least **2 GPUs** for smooth operation.
 * **Software**:
-
-  * Python 3.8+
+  * Python 3.10+
   * PyTorch 2.x with CUDA support
   * `accelerate` (for distributed device mapping)
   * `diffusers`, `transformers`, `torch`, and other dependencies (see `requirements.txt`).
@@ -65,8 +64,7 @@ flux-vram-optimized/
 │   ├── ImageGenerator.py      # Latent generator (text2img / img2img)
 │   └── ImageDecoder.py        # VAE decoder pipeline
 │   └── helpers.py             # max_memory, fix_size, debug utilities
-├── scripts/
-│   └── run_inference.py       # Main entry-point script
+├── run_inference.py           # Main entry-point script
 ├── requirements.txt
 ├── README.md
 └── LICENSE
@@ -76,15 +74,15 @@ flux-vram-optimized/
 
 ## 🔧 Configuration
 
-All script options can be adjusted in `scripts/run_inference.py`:
+All script options can be adjusted in `run_inference.py`:
 
 | Parameter       | Description                                                                          | Default                            |
 | --------------- | ------------------------------------------------------------------------------------ | ---------------------------------- |
 | `model_id`      | Hugging Face model ID for Flux generation (e.g., `black-forest-labs/FLUX.1-schnell`) | `black-forest-labs/FLUX.1-schnell` |
-| `enable_redux`  | Toggle Flux Redux embedding stage                                                    | `False`                            |
+| `enable_redux`  | Toggle Flux Redux embedding stage                                                    | `True`                             |
 | `scale`         | Fraction of GPU memory to allocate (reserve \~1 GB for OS/GUI)                       | `0.90`                             |
 | `num_inference` | Number of diffusion steps / iterations                                               | `25`                               |
-| `device_map`    | Configuration for `accelerate` to split modules across GPUs                          | Auto                               |
+| `device_map`    | Configuration for `accelerate` to split modules across GPUs                          | `balanced`                         |
 
 Edit these values directly or add CLI flags as needed.
 
@@ -92,35 +90,13 @@ Edit these values directly or add CLI flags as needed.
 
 ## 🚀 Usage
 
-1. **Embedding Stage** (FluxPriorRedux)
-
-   ```bash
-   python scripts/run_inference.py --stage embed
-   ```
-
-   * Computes and saves `prompt_embeds.pt` and `pooled_prompt_embeds.pt` in `temp/debug_latents/`.
-
-2. **Latent Generation Stage** (ImageGenerator)
-
-   ```bash
-   python scripts/run_inference.py --stage generate
-   ```
-
-   * Produces a latents file `results.pt` and logs the random seed for reproducibility.
-
-3. **Decoding Stage** (ImageDecoder)
-
-   ```bash
-   python scripts/run_inference.py --stage decode
-   ```
-
-   * Decodes latents into a Pillow `Image` and saves as `flux_<timestamp>.png` in `temp/`.
-
-Alternatively, run the full pipeline end-to-end:
+Simply run the entire pipeline end-to-end with:
 
 ```bash
-python scripts/run_inference.py --stage all
+python run_inference.py
 ```
+
+All configuration—such as `enable_redux`, memory `scale`, number of inference steps, and model IDs—is controlled by editing the top section of `run_inference.py`.
 
 ---
 
@@ -142,7 +118,7 @@ python scripts/run_inference.py --stage all
 
 ## ❓ Troubleshooting
 
-* **OOM Errors**: Lower `scale`, reduce `num_inference` steps, or upgrade VRAM.
+* **OOM Errors**: Lower `scale`, reduce `num_inference` steps.
 * **Missing GPU**: Ensure `accelerate` is configured (`accelerate config`) and GPUs are visible.
 * **Slow Performance**: Try disabling full pipeline loading (`full_load=False`) or lower resolution.
 
