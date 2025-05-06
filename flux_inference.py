@@ -40,7 +40,7 @@ model = "ostris/Flex.1-alpha"  # Alternatives: "black-forest-labs/FLUX.1-schnell
 
 # --- Load and prepare the initial image ---
 init_image = load_image(
-    "https://static01.nyt.com/images/2023/08/13/magazine/13mag-female/13mag-female-articleLarge.jpg"
+        "https://huggingface.co/datasets/OzzyGT/testing-resources/resolve/main/differential/20240329211129_4024911930.png?download=true"
 )
 # Ensure dimensions are multiples of the model's required size
 width, height = fix_size(init_image.width), fix_size(init_image.height)
