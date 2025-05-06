@@ -1,5 +1,4 @@
 ### Flux Image Generation Script
-
 # This script is structured into three modular pipelines to optimize VRAM usage on consumer GPUs:
 #
 # 1. **TextEncoder** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
@@ -45,9 +44,7 @@ init_image = load_image(
     "temp/flux_20250505_183815.png"
 )
 # Ensure dimensions are multiples of the model's required size
-#width, height = fix_size(init_image.width), fix_size(init_image.height)
-width, height = fix_size(1280), fix_size(1280)
-
+width, height = fix_size(init_image.width), fix_size(init_image.height)
 
 # --- Generate or load prompt embeddings (tokenizer/text_encoder)---
 enable_textencoder = True
