@@ -3,6 +3,11 @@ import gc
 
 from time import sleep as delay
 
+def ensure_dtype(tensor, dtype):
+    if tensor is None:
+        return None
+    return tensor if tensor.dtype == dtype else tensor.to(dtype=dtype)
+
 def unpack_laten(images_latens, height: int, width: int, scale_factor:int) -> torch.Tensor:
     batch_size, num_patches, channels = images_latens.shape
 
