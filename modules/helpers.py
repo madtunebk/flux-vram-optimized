@@ -15,11 +15,6 @@ def unpack_laten(images_latens, height: int, width: int, scale_factor:int) -> to
 
     return reshape_latents
 
-def ensure_dtype(tensor, dtype):
-    if tensor is None:
-        return None
-    return tensor if tensor.dtype == dtype else tensor.to(dtype=dtype)
-
 def max_memory(scale: float = 0.97) -> dict:
     map_devices = {}
     for i in range(torch.cuda.device_count()):
