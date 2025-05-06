@@ -2,14 +2,17 @@
 
 # This script is structured into three modular pipelines to optimize VRAM usage on consumer GPUs:
 #
-# 1. **FluxPriorRedux** (`black-forest-labs/FLUX.1-Redux-dev`)
+# 1. **TextEncoder** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
+#    - converts your text prompt into embeddings via a CLIP-style encoder
+#
+# 2. **FluxPriorRedux** (`black-forest-labs/FLUX.1-Redux-dev`)
 #    - Computes image-conditioned latent prompt embeddings using the Flux Redux architecture.
 #
-# 2. **ImageGenerator** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
+# 3. **ImageGenerator** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
 #    - Loads minimal text-to-image or image-to-image pipelines (transformers + VAE + FluxImg2ImgPipeline or FluxPipeline).
 #    - Offers an optional Redux variation mode for stylized variations of the input image.
 #
-# 3. **ImageDecoder** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
+# 4. **ImageDecoder** (`black-forest-labs/FLUX.1-dev` / `black-forest-labs/FLUX.1-schnell`)
 #    - Uses the AutoencoderKL VAE decoder to convert latents back into Pillow `Image` objects.
 #
 # **Design Rationale:**
@@ -19,6 +22,7 @@
 # - Utilizes `accelerate` with `device_map` to distribute workloads across multiple CUDA devices.
 
 # --- Setup imports and helper functions ---
+#from modules.FluxPriorRedux import FluxPriorRedux  #TODO
 from modules.FluxPriorRedux import FluxPriorRedux
 from modules.ImageGenerator import ImageGenerator
 from modules.ImageDecoder import ImageDecoder
