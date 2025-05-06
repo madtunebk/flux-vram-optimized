@@ -98,8 +98,6 @@ if latentgen:
 with ImageDecoder(model_id=model, rungpu=True) as decoder:
     # Create a timestamp for the output filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    # Optionally resize decode dimensions
-    width, height = fix_size(960), fix_size(960)
     # Load the saved latents
     latent = torch.load("temp/debug_latents/results.pt")
 
