@@ -77,7 +77,7 @@ if latentgen:
         torch_dtype=torch.bfloat16
     ) as latent:
         # Seed the random generator for reproducibility
-        seed = random.randint(1e11, 1e12 - 1)
+        seed = random.randint(int(1e11), int(1e12 - 1))
         generator = torch.Generator(device="cuda").manual_seed(seed)
         print(f"🌱 Generator initialized with seed: {generator.initial_seed()}")
 
