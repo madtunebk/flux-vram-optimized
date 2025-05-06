@@ -4,4 +4,4 @@ transformers
 accelerate
 protobuf
 sentencepiece
-perf
+peft
