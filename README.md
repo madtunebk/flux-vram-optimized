@@ -102,8 +102,8 @@ All configuration—such as `enable_redux`, memory `scale`, number of inference 
 
 ## 📸 Examples
 
-![Output Example 1](examples/output1.png)
-![Output Example 2](examples/output2.png)
+![Output Example 1](examples/flux_20250504_165658.png)
+![Output Example 2](examples/flux_20250505_130923.png)
 
 ---
 
