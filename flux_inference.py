@@ -22,7 +22,7 @@
 # - Utilizes `accelerate` with `device_map` to distribute workloads across multiple CUDA devices.
 
 # --- Setup imports and helper functions ---
-#from modules.FluxPriorRedux import FluxPriorRedux  #TODO
+#from modules.TextEncoder import TextEncoder  #TODO
 from modules.FluxPriorRedux import FluxPriorRedux
 from modules.ImageGenerator import ImageGenerator
 from modules.ImageDecoder import ImageDecoder
