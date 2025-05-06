@@ -1,1 +1,15 @@
+MIT License
 
+Copyright (c) 2025 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+Model Licensing: This repository provides code only. The Flux models used by this code (e.g., FLUX.1-dev, FLUX.1-schnell, FLUX.1-Redux-dev) are not owned by the authors of this repository and are subject to their respective Hugging Face terms of use. Users must comply with the license terms of each model when downloading or using them.
+
+Warranty: The Software is provided "as is", without warranty of any kind, express or implied. In no event shall the authors be liable for any claim, damages or other liability arising from the use of the Software.
+
+Liability: In no event and under no legal theory, whether in tort, contract, or otherwise, shall the authors be liable to anyone for any damages arising from the use of the Software.
+
+Termination: This license and your rights under this license will terminate automatically if you fail to comply with any of these terms.
