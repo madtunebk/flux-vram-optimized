@@ -132,6 +132,11 @@ All configuration—such as `enable_redux`, memory `scale`, number of inference 
 * **Missing GPU**: Ensure `accelerate` is configured (`accelerate config`) and GPUs are visible.
 * **Slow Performance**: Try disabling full pipeline loading (`full_load=False`) or lower resolution.
 
+### 🛠️ TODO
+
+- [ ] Add support for 8-bit and/or 4-bit model loading  
+- [ ] ComfyUI custom node implemented  
+- [ ] Gradio app for standalone usage
 ---
 
 ## 🤝 Contributing
