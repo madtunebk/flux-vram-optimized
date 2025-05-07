@@ -134,8 +134,15 @@ All configuration—such as `enable_redux`, memory `scale`, number of inference 
 
 ### 🛠️ TODO
 
-- [ ] Add support for loading custom transformer  `text_encoder`, `tokenizer`,  `transformer` or `VAE`
-- [ ] Add support to load `transformer` in `fp16`, `8-bit`, and/or `4-bit`  
+#### 🧠 Model Loading
+- [ ] Add support for loading custom VAE  
+- [ ] Add support for loading custom transformer  
+- [ ] Load transformer in `fp16`, `8-bit`, and/or `4-bit`  
+
+#### 📦 Features
+- [ ] Integrate Florence2 for image interrogation (captioning/tagging)
+
+#### 🧩 Interfaces
 - [ ] ComfyUI custom node implemented  
 - [ ] Gradio app for standalone usage
 ---
